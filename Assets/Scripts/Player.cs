@@ -10,6 +10,13 @@ public class Player : MonoBehaviour
     public int DamAmmo = 5;
     public int ElectricAmmo = 5;
     public int NormalAmmo = 5;
+
+    //技能模块
+    public bool SkillsMenu = false;
+    public int cntskills = 5;
+    public int cntAtk = 0;
+    public float cntSpeed = 0.0f;
+    public int cntLife = 0;
     //创建特殊弹药类型
     public Stack SpecialMag = new Stack();
     //枚举弹药类型
@@ -58,8 +65,11 @@ public class Player : MonoBehaviour
     // 射击音效
     public AudioClip m_audio;
 
+    public AudioClip m_special_audio;
+
     // 射击间隔时间计时器
     float m_shootTimer = 0;
+    float m_special_shootTimer = 0;
 
 
     // Use this for initialization
@@ -95,7 +105,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        m_movSpeed = 3.0f + cntSpeed;
         // 生命值为0，GG
         if (m_life <= 0)
             return;
@@ -147,41 +157,56 @@ public class Player : MonoBehaviour
 
         // 更新射击间隔时间
         m_shootTimer -= Time.deltaTime;
+        m_special_shootTimer -= Time.deltaTime;
 
-        //特殊弹药压入
-        if (Input.GetKeyDown(KeyCode.Alpha1) && (ShockedAmmo != 0))
+        if (Input.GetKeyDown(KeyCode.K) && cntskills != 0)
         {
-            SpecialMag.Push(SpecialAmmo.ShcokedAmmo);//麻痹弹药
-            ShockedAmmo--;
-            GameManager.Instance.SetAmmo(0);
-            Debug.Log("ShockedAMMO");
+            if (SkillsMenu)
+                SkillsMenu = false;
+            else
+                SkillsMenu = true;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && (OnFireAmmo != 0))
+        if (SkillsMenu)
         {
-            SpecialMag.Push(SpecialAmmo.OnFireAmmo);//火炎弹药
-            OnFireAmmo--;
-            GameManager.Instance.SetAmmo(0);
-            Debug.Log("OnFireAMMO");
+            skillsUpdate();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3) && (DamAmmo != 0))
+        else
         {
-            SpecialMag.Push(SpecialAmmo.DamAmmo);//达姆弹
-            DamAmmo--;
-            GameManager.Instance.SetAmmo(0);
-            Debug.Log("DamAMMO");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4) && (ElectricAmmo != 0))
-        {
-            SpecialMag.Push(SpecialAmmo.ElectricAmmo);//电击弹药
-            ElectricAmmo--;
-            GameManager.Instance.SetAmmo(0);
-            Debug.Log("ElectricAMMO");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SpecialMag.Push(SpecialAmmo.NormalAmmo);
-            Debug.Log("NormalAMMO");
-            GameManager.Instance.SetAmmo(0);
+            //特殊弹药压入
+            if (Input.GetKeyDown(KeyCode.Alpha1) && (ShockedAmmo != 0))
+            {
+                SpecialMag.Push(SpecialAmmo.ShcokedAmmo);//麻痹弹药
+                ShockedAmmo--;
+                GameManager.Instance.SetAmmo(0);
+                Debug.Log("ShockedAMMO");
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2) && (OnFireAmmo != 0))
+            {
+                SpecialMag.Push(SpecialAmmo.OnFireAmmo);//火炎弹药
+                OnFireAmmo--;
+                GameManager.Instance.SetAmmo(0);
+                Debug.Log("OnFireAMMO");
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3) && (DamAmmo != 0))
+            {
+                SpecialMag.Push(SpecialAmmo.DamAmmo);//达姆弹
+                DamAmmo--;
+                GameManager.Instance.SetAmmo(0);
+                Debug.Log("DamAMMO");
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4) && (ElectricAmmo != 0))
+            {
+                SpecialMag.Push(SpecialAmmo.ElectricAmmo);//电击弹药
+                ElectricAmmo--;
+                GameManager.Instance.SetAmmo(0);
+                Debug.Log("ElectricAMMO");
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                SpecialMag.Push(SpecialAmmo.NormalAmmo);
+                Debug.Log("NormalAMMO");
+                GameManager.Instance.SetAmmo(0);
+            }
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -193,15 +218,21 @@ public class Player : MonoBehaviour
 
         }
         // 鼠标左键射击
-        if (Input.GetMouseButton(0) && m_shootTimer <= 0)
+        if (Input.GetMouseButton(0) && m_shootTimer <= 0 && !SpecialMagOn)
+        {
+            this.GetComponent<AudioSource>().PlayOneShot(m_audio);
+            shoot();
+        }
+        else if (Input.GetMouseButton(0) && m_special_shootTimer <= 0 && SpecialMagOn)
         {
             if (SpecialMagOn)
             {
                 if (SpecialMag.Count != 0)
+                {
+                    this.GetComponent<AudioSource>().PlayOneShot(m_special_audio);
                     shoot();
+                }
             }
-            else
-                shoot();
         }
 
 
@@ -237,12 +268,12 @@ public class Player : MonoBehaviour
 
     void shoot()
     {
-        if (SpecialMagOn)
-        {
-            //SpecialAmmoShooted = SpecialMag.Pop();
-        }
+        //if (SpecialMagOn)
+        //{
+        //    //SpecialAmmoShooted = SpecialMag.Pop();
+        //}
         m_shootTimer = 0.1f;
-        this.GetComponent<AudioSource>().PlayOneShot(m_audio);
+        m_special_shootTimer = 0.9f;
         // 减少弹药，更新弹药UI
 
         // RaycastHit用来保存射线的探测结果
@@ -258,7 +289,9 @@ public class Player : MonoBehaviour
             {
                 Enemy enemy = info.transform.GetComponent<Enemy>();
                 if (!SpecialMagOn)
-                    enemy.OnDamage(1);
+                {
+                    enemy.OnDamage(1 + cntAtk);
+                }
                 else
                 {
                     if (SpecialMag.Count != 0)
@@ -267,20 +300,20 @@ public class Player : MonoBehaviour
                         {
                             case SpecialAmmo.ShcokedAmmo:
                                 enemy.Shocked = true;
-                                enemy.OnDamage(3);
+                                enemy.OnDamage(3 + cntAtk);
                                 break;
                             case SpecialAmmo.OnFireAmmo:
                                 enemy.OnFire = true;
-                                enemy.OnDamage(1);
+                                enemy.OnDamage(1 + cntAtk);
                                 break;
                             case SpecialAmmo.ElectricAmmo://连锁功能，可通过rigibody组件来实现
-                                enemy.OnDamage(10);
+                                enemy.OnDamage(10 + cntAtk);
                                 break;
                             case SpecialAmmo.DamAmmo:
-                                enemy.OnDamage(30);
+                                enemy.OnDamage(30 + cntAtk);
                                 break;
                             case SpecialAmmo.NormalAmmo:
-                                enemy.OnDamage(1);
+                                enemy.OnDamage(1 + cntAtk);
                                 break;
                         }
                     }
@@ -301,11 +334,26 @@ public class Player : MonoBehaviour
 
 
     }
+    void skillsUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && cntskills != 0)
+        {
+            cntAtk++;
+            cntskills--;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && cntskills != 0&&cntSpeed<=20)
+        {
+            cntSpeed = cntSpeed + 0.5f;
+            cntskills--;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && cntskills != 0)
+        {
+            cntLife++;
+            //int peach = (5 + cntLife) - m_life;
+            //GameManager.Instance.SetLife(peach);
+            m_life = 5 + cntLife;
+            GameManager.Instance.SetLife(m_life);
+            cntskills--;
+        }
+    }
 }
-/*
- printf("xiang mu shijian");
- freopen("项目.txt","w",stdout);
- if(需要）
- {
- freopen("项目.txt","r",stdin);
- */

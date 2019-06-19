@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour {
     //特殊状态
     public bool Shocked = false;
     public bool OnFire = false;
+    public int cntdamageFire = 0;
     
     // 动画组件
     Animator m_ani;
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour {
 
     // 计时器
     float m_timer=2;
+    float m_fireTimer = 1;
 
     // 生命值
     public int m_life = 15;
@@ -89,6 +91,22 @@ public class Enemy : MonoBehaviour {
             m_ani.SetBool("run", true);
         }
         m_agent.SetDestination(m_player.m_transform.position);
+
+        while(this.OnFire)
+        {
+            m_fireTimer -= Time.deltaTime;
+            if (m_fireTimer == 0)
+            {
+                cntdamageFire++;
+                m_fireTimer = 1;
+                this.OnDamage(3);
+            }
+            if(cntdamageFire==5)
+            {
+                cntdamageFire = 0;
+                this.OnFire=false;
+            }
+        }
 
         // 如果处于待机且不是过渡状态
         if (stateInfo.fullPathHash == Animator.StringToHash("Base Layer.idle")
