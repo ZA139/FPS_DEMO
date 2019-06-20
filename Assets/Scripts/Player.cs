@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
 
     //技能模块
     public bool SkillsMenu = false;
-    public int cntskills = 5;
+    public int cntskills = 200;
     public int cntAtk = 0;
     public float cntSpeed = 0.0f;
     public int cntLife = 0;

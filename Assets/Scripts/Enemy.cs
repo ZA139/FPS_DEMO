@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour {
     // 计时器
     float m_timer=2;
     float m_fireTimer = 1;
+    float m_shockedTimer = 5;
 
     // 生命值
     public int m_life = 15;
@@ -72,30 +73,29 @@ public class Enemy : MonoBehaviour {
             return;
         // 更新计时器
         m_timer -= Time.deltaTime;
+        m_fireTimer -= Time.deltaTime;
 
         // 获取当前动画状态
         AnimatorStateInfo stateInfo = m_ani.GetCurrentAnimatorStateInfo(0);
 
-        if (Shocked)
+        if (this.Shocked)
         {
+            m_shockedTimer -= Time.deltaTime;
             Debug.Log("Enemy Shocked!");
             //m_ani.SetBool("Shocked", true);
-            float timer = 5.0f;
-            m_movSpeed = 0.0f;
-            m_agent.ResetPath();
-            timer -= Time.deltaTime;
-            m_movSpeed = 2.5f;
-            Shocked = false;
-
-            // 进入跑步动画状态
-            m_ani.SetBool("run", true);
+            this.m_agent.ResetPath();
+            this.m_ani.SetBool("idle", true);
+            this.m_ani.SetBool("run", false);
         }
-        m_agent.SetDestination(m_player.m_transform.position);
-
-        while(this.OnFire)
+        if(m_shockedTimer<=0)
         {
-            m_fireTimer -= Time.deltaTime;
-            if (m_fireTimer == 0)
+            m_shockedTimer = 5;
+            this.Shocked = false;
+        }
+
+        if(this.OnFire)
+        {
+            if (m_fireTimer <= 0)
             {
                 cntdamageFire++;
                 m_fireTimer = 1;
@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour {
 
         // 如果处于待机且不是过渡状态
         if (stateInfo.fullPathHash == Animator.StringToHash("Base Layer.idle")
-&& !m_ani.IsInTransition(0))
+&& !m_ani.IsInTransition(0)&&!Shocked)
         {
             m_ani.SetBool("idle", false);
 
