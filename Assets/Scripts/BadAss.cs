@@ -221,6 +221,7 @@ public class BadAss : MonoBehaviour
             if (stateInfo.normalizedTime >= 1.0f)
             {
                 // 加分
+                m_player.cntSpeed += 0.5f;
                 GameManager.Instance.SetScore(10000);
                 m_player.cntskills+=5;
                 badAssSpawn.boos = false;
