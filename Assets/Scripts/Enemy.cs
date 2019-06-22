@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour {
     public bool Shocked = false;
     public bool OnFire = false;
     public int cntdamageFire = 0;
-    
     // 动画组件
     Animator m_ani;
 
@@ -195,6 +194,7 @@ public class Enemy : MonoBehaviour {
 
                 // 加分
                 GameManager.Instance.SetScore(100);
+                m_player.cnt_kills++;
 
                 // 销毁自身
                 Destroy(this.gameObject);

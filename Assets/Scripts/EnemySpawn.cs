@@ -43,7 +43,7 @@ public class EnemySpawn : MonoBehaviour
             // 生成敌人
             Transform obj=(Transform)Instantiate(m_enemy, m_transform.position, Quaternion.identity);
 
-            // 获取敌人的角本
+            // 获取敌人的脚本
             Enemy enemy = obj.GetComponent<Enemy>();
 
             // 初始化敌人

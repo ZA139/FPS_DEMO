@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public int cntAtk = 0;
     public float cntSpeed = 0.0f;
     public int cntLife = 0;
+    public long cnt_kills = 0;
     //创建特殊弹药类型
     public Stack SpecialMag = new Stack();
     //枚举弹药类型
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
     CharacterController m_ch;
 
     // 角色移动速度
-    float m_movSpeed = 3.0f;
+    public float m_movSpeed = 10.0f;
 
     // 重力
     float m_gravity = 2.0f;
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour
 
     // 射击时，射线能射到的碰撞层
     public LayerMask m_layer;
+    public LayerMask m_layer_ass;
 
     // 射中目标后的粒子效果
     public Transform m_fx;
@@ -115,7 +117,11 @@ public class Player : MonoBehaviour
 
     void Control()
     {
-
+        if (cnt_kills / 50 > 0)
+        {
+            cntskills++;
+            cnt_kills -= 50;
+        }
         //获取鼠标移动距离
         float rh = Input.GetAxis("Mouse X");
         float rv = Input.GetAxis("Mouse Y");
@@ -278,19 +284,51 @@ public class Player : MonoBehaviour
 
         // RaycastHit用来保存射线的探测结果
         RaycastHit info;
+        RaycastHit info_ass;
 
         // 从muzzlepoint的位置，向摄像机面向的正方向射出一根射线
         // 射线只能与m_layer所指定的层碰撞
+        bool hit_ass = Physics.Raycast(m_muzzlepoint.position, m_camTransform.TransformDirection(Vector3.forward), out info_ass, 100, m_layer_ass);
         bool hit = Physics.Raycast(m_muzzlepoint.position, m_camTransform.TransformDirection(Vector3.forward), out info, 100, m_layer);
+        //Debug.Log("info:"+info.transform.tag);
         if (hit)
         {
+            //Debug.Log("info_ass:"+info_ass.transform.tag);
             // 如果射中了Tag为enemy的游戏体
+            if (SpecialMagOn)
+            {
+                //Debug.Log(info_ass.transform.tag);
+                if (info_ass.transform.tag.CompareTo("Left") == 0)
+                {
+                    BadAss badAss = info.transform.GetComponent<BadAss>();
+                    badAss.m_ani.SetTrigger("left");
+                }
+                else if (info_ass.transform.tag.CompareTo("Right") == 0)
+                {
+                    BadAss badAss = info.transform.GetComponent<BadAss>();
+                    badAss.m_ani.SetTrigger("right");
+                }
+                else if (info_ass.transform.tag.CompareTo("head") == 0)
+                {
+                    BadAss badAss = info.transform.GetComponent<BadAss>();
+                    badAss.m_ani.SetTrigger("head");
+                }
+                else if(info_ass.transform.tag.CompareTo("body")==0)
+                {
+                    BadAss badAss = info.transform.GetComponent<BadAss>();
+                    badAss.m_ani.SetTrigger("body");
+                }
+            }
             if (info.transform.tag.CompareTo("enemy") == 0)
             {
                 Enemy enemy = info.transform.GetComponent<Enemy>();
+                BadAss badAss = info.transform.GetComponent<BadAss>();
                 if (!SpecialMagOn)
                 {
-                    enemy.OnDamage(1 + cntAtk);
+                    if (enemy)
+                        enemy.OnDamage(1 + cntAtk);
+                    else
+                        badAss.OnDamage(1 + cntAtk);
                 }
                 else
                 {
@@ -299,21 +337,47 @@ public class Player : MonoBehaviour
                         switch (SpecialMag.Pop())
                         {
                             case SpecialAmmo.ShcokedAmmo:
-                                enemy.Shocked = true;
-                                enemy.OnDamage(3 + cntAtk);
+                                if (enemy)
+                                {
+                                    enemy.Shocked = true;
+                                    enemy.OnDamage(3 + cntAtk);
+                                }
+                                else
+                                {
+                                    badAss.m_ani.SetBool("schocked", true);
+                                    badAss.Shocked = true;
+                                    badAss.OnDamage(3 + cntAtk);
+                                }
                                 break;
                             case SpecialAmmo.OnFireAmmo:
-                                enemy.OnFire = true;
-                                enemy.OnDamage(1 + cntAtk);
+                                if (enemy)
+                                {
+                                    enemy.OnFire = true;
+                                    enemy.OnDamage(1 + cntAtk);
+                                }
+                                else
+                                {
+                                    badAss.OnFire = true;
+                                    badAss.OnDamage(1 + cntAtk);
+                                }
                                 break;
                             case SpecialAmmo.ElectricAmmo://连锁功能，可通过rigibody组件来实现
-                                enemy.OnDamage(10 + cntAtk);
+                                if (enemy)
+                                    enemy.OnDamage(10 + cntAtk);
+                                else
+                                    badAss.OnDamage(10 + cntAtk);
                                 break;
                             case SpecialAmmo.DamAmmo:
-                                enemy.OnDamage(30 + cntAtk);
+                                if (enemy)
+                                    enemy.OnDamage(30 + cntAtk);
+                                else
+                                    badAss.OnDamage(30 + cntAtk);
                                 break;
                             case SpecialAmmo.NormalAmmo:
-                                enemy.OnDamage(1 + cntAtk);
+                                if (enemy)
+                                    enemy.OnDamage(1 + cntAtk);
+                                else
+                                    badAss.OnDamage(1 + cntAtk);
                                 break;
                         }
                     }
@@ -341,7 +405,7 @@ public class Player : MonoBehaviour
             cntAtk++;
             cntskills--;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && cntskills != 0&&cntSpeed<=20)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && cntskills != 0 && cntSpeed <= 20)
         {
             cntSpeed = cntSpeed + 0.5f;
             cntskills--;
