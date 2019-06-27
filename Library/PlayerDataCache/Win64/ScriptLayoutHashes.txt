@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/a1399/Desktop/垃圾游戏/酸菜鱼射击.exe
+C:/Users/a1399/Desktop/课程设计/垃圾游戏/酸菜鱼射击.exe
 SceneListBegin?
 Assets/Scenes/demo.unity
 SceneListEnd?

@@ -297,26 +297,29 @@ public class Player : MonoBehaviour
             // 如果射中了Tag为enemy的游戏体
             if (SpecialMagOn)
             {
-                //Debug.Log(info_ass.transform.tag);
-                if (info_ass.transform.tag.CompareTo("Left") == 0)
+                if (info_ass.collider != null)
                 {
-                    BadAss badAss = info.transform.GetComponent<BadAss>();
-                    badAss.m_ani.SetTrigger("left");
-                }
-                else if (info_ass.transform.tag.CompareTo("Right") == 0)
-                {
-                    BadAss badAss = info.transform.GetComponent<BadAss>();
-                    badAss.m_ani.SetTrigger("right");
-                }
-                else if (info_ass.transform.tag.CompareTo("head") == 0)
-                {
-                    BadAss badAss = info.transform.GetComponent<BadAss>();
-                    badAss.m_ani.SetTrigger("head");
-                }
-                else if(info_ass.transform.tag.CompareTo("body")==0)
-                {
-                    BadAss badAss = info.transform.GetComponent<BadAss>();
-                    badAss.m_ani.SetTrigger("body");
+                    //Debug.Log(info_ass.transform.tag);
+                    if (info_ass.transform.tag.CompareTo("Left") == 0)
+                    {
+                        BadAss badAss = info.transform.GetComponent<BadAss>();
+                        badAss.m_ani.SetTrigger("left");
+                    }
+                    else if (info_ass.transform.tag.CompareTo("Right") == 0)
+                    {
+                        BadAss badAss = info.transform.GetComponent<BadAss>();
+                        badAss.m_ani.SetTrigger("right");
+                    }
+                    else if (info_ass.transform.tag.CompareTo("head") == 0)
+                    {
+                        BadAss badAss = info.transform.GetComponent<BadAss>();
+                        badAss.m_ani.SetTrigger("head");
+                    }
+                    else if (info_ass.transform.tag.CompareTo("body") == 0)
+                    {
+                        BadAss badAss = info.transform.GetComponent<BadAss>();
+                        badAss.m_ani.SetTrigger("body");
+                    }
                 }
             }
             if (info.transform.tag.CompareTo("enemy") == 0)
