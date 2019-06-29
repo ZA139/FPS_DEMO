@@ -9,7 +9,7 @@ public class BadAssSpawn : EnemySpawn
 
     protected Transform m_transform;
 
-    float m_timer = 20.0f;
+    float m_timer = 46.0f;
 
     public bool boos = false;
 

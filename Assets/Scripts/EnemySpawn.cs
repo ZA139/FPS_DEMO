@@ -56,5 +56,5 @@ public class EnemySpawn : MonoBehaviour
     {
         Gizmos.DrawIcon (transform.position, "item.png", true);
     }
-
+    
 }

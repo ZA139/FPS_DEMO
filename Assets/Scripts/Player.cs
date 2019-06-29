@@ -121,6 +121,10 @@ public class Player : MonoBehaviour
         {
             cntskills++;
             cnt_kills -= 50;
+            ShockedAmmo += 5;
+            OnFireAmmo += 5;
+            ElectricAmmo += 5;
+            DamAmmo += 5;
         }
         //获取鼠标移动距离
         float rh = Input.GetAxis("Mouse X");
@@ -182,6 +186,7 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha1) && (ShockedAmmo != 0))
             {
                 SpecialMag.Push(SpecialAmmo.ShcokedAmmo);//麻痹弹药
+                //GameManager.Instance.SetShocked(1);
                 ShockedAmmo--;
                 GameManager.Instance.SetAmmo(0);
                 Debug.Log("ShockedAMMO");
@@ -347,7 +352,7 @@ public class Player : MonoBehaviour
                                 }
                                 else
                                 {
-                                    badAss.m_ani.SetBool("schocked", true);
+                                    badAss.m_ani.SetBool("shocked", true);
                                     badAss.Shocked = true;
                                     badAss.OnDamage(3 + cntAtk);
                                 }
@@ -372,9 +377,9 @@ public class Player : MonoBehaviour
                                 break;
                             case SpecialAmmo.DamAmmo:
                                 if (enemy)
-                                    enemy.OnDamage(30 + cntAtk);
+                                    enemy.OnDamage(100 + cntAtk);
                                 else
-                                    badAss.OnDamage(30 + cntAtk);
+                                    badAss.OnDamage(100 + cntAtk);
                                 break;
                             case SpecialAmmo.NormalAmmo:
                                 if (enemy)

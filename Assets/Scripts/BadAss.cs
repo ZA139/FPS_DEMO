@@ -19,7 +19,6 @@ public class BadAss : MonoBehaviour
     public bool first_fire = true;
     public int cntdamageFire = 0;
     public float a;
-
     // 动画组件
     public Animator m_ani;
 
@@ -86,7 +85,6 @@ public class BadAss : MonoBehaviour
             return;
         // 更新计时器
         m_timer -= Time.deltaTime;
-        m_fireTimer -= Time.deltaTime;
 
         // 获取当前动画状态
         AnimatorStateInfo stateInfo = m_ani.GetCurrentAnimatorStateInfo(0);
@@ -104,10 +102,12 @@ public class BadAss : MonoBehaviour
         {
             m_shockedTimer = 5;
             this.Shocked = false;
+            this.m_ani.SetBool("shocked", false);
         }
 
         if (this.OnFire)
         {
+            m_fireTimer -= Time.deltaTime;
             if (this.first_fire)
             {
                 this.GetComponent<AudioSource>().PlayOneShot(m_Flame);
@@ -117,7 +117,7 @@ public class BadAss : MonoBehaviour
             {
                 cntdamageFire++;
                 m_fireTimer = 1;
-                this.OnDamage(3);
+                this.OnDamage(20);
             }
             if (cntdamageFire == 5)
             {
@@ -224,6 +224,10 @@ public class BadAss : MonoBehaviour
                 m_player.cntSpeed += 0.5f;
                 GameManager.Instance.SetScore(10000);
                 m_player.cntskills+=5;
+                m_player.DamAmmo += 5;
+                m_player.ElectricAmmo += 5;
+                m_player.OnFireAmmo += 5;
+                m_player.ShockedAmmo += 5;
                 badAssSpawn.boos = false;
                 // 销毁自身
                 Destroy(this.gameObject);

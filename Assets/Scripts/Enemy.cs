@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour {
     // 寻路组件
     NavMeshAgent m_agent;
 
-    // 主角实例
+    // 主角实例 
     Player m_player;
 
     // 移动速度

@@ -15,10 +15,19 @@ public class GameManager : MonoBehaviour {
     // 弹药数量
     public int m_ammo = 100;
 
+    public int Dam = 5;
+    public int Electric = 5;
+    public int Shocked = 5;
+    public int Fire = 5;
+
     // 游戏主角
     Player m_player;
 
     // UI文字
+    Text txt_Electric;
+    Text txt_Dam;
+    Text txt_Fire;
+    Text txt_Shocked;
     Text txt_ammo;
     Text txt_hiscore;
     Text txt_life;
@@ -54,10 +63,32 @@ public class GameManager : MonoBehaviour {
             {
                 txt_score = t.GetComponent<Text>();
             }
+            //else if (t.name.CompareTo("Text") == 0)
+            //{
+            //    GameObject uicanvas1 = GameObject.Find("Text");
+            //    foreach (Transform a in uicanvas1.transform.GetComponentsInChildren<Transform>())
+            //        if (a.name.CompareTo("Shocked") == 0)
+            //    {
+            //        txt_Shocked = a.GetComponent<Text>();
+            //    }
+            //    else if (a.name.CompareTo("Dam") == 0)
+            //    {
+            //        txt_Dam = a.GetComponent<Text>();
+            //    }
+            //    else if (a.name.CompareTo("Electric") == 0)
+            //    {
+            //        txt_Electric = a.GetComponent<Text>();
+            //    }
+            //    else if (a.name.CompareTo("Fire") == 0)
+            //    {
+            //        txt_Fire = a.GetComponent<Text>();
+            //    }
+            //}
             else if (t.name.CompareTo("Restart Button") == 0)
             {
                 button_restart = t.GetComponent<Button>();
-                button_restart.onClick.AddListener(delegate (){//设置重新开始游戏按钮事件
+                button_restart.onClick.AddListener(delegate ()
+                {//设置重新开始游戏按钮事件
                     // 读取当前关卡
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 });
@@ -140,6 +171,11 @@ public class GameManager : MonoBehaviour {
         if ( life<=0)  // 当主角生命为0时显示重新开始游戏按钮
             button_restart.gameObject.SetActive(true);
     }
+    //public void SetShocked(int i)
+    //{
+    //    Shocked -= i;
+    //    txt_Shocked.text = "Shocked" + txt_Shocked.ToString();
+    //}
 
 
 
