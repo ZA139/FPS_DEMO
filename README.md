@@ -48,20 +48,20 @@ V0.4更新说明
 
 
 
-本课程设计使用的部分美术资源分别来自于:
-金玺曾.Unity 3D/2D手机游戏开发：从学习到产品[M].北京：清华大学出版社，2017.
-敌人处于燃烧状态Flame.ogg音效 
-作者：themightyglider
-来源：https://opengameart.org/content/catching-fire 
-CC协议版本0.0（PUBLIC DOMAIN）
-BadAss模型及动画
-作者：Rosswet Mobile
-来源：https://opengameart.org/content/thin-zombie-awake-zombie-asset
-CC协议版本3.0（by）
-特殊弹药Shot音效
-	作者：Michel Baradari
-	来源：https://opengameart.org/content/chaingun-pistol-rifle-shotgun-shots
-CC协议版本3.0（by）
-特别感谢沈阳建筑大学通信工程大一温兆熙制作的背景音乐
-BadAss出场音乐
-Divide-------------Magna----《Hotline Miami 2 Wrong Number Soundtrack》
+本课程设计使用的部分美术资源分别来自于:  
+金玺曾.Unity 3D/2D手机游戏开发：从学习到产品[M].北京：清华大学出版社，2017.  
+敌人处于燃烧状态Flame.ogg音效   
+作者：themightyglider  
+来源：https://opengameart.org/content/catching-fire   
+CC协议版本0.0（PUBLIC DOMAIN）  
+BadAss模型及动画  
+作者：Rosswet Mobile  
+来源：https://opengameart.org/content/thin-zombie-awake-zombie-asset  
+CC协议版本3.0（by）  
+特殊弹药Shot音效  
+	作者：Michel Baradari  
+	来源：https://opengameart.org/content/chaingun-pistol-rifle-shotgun-shots  
+CC协议版本3.0（by）  
+特别感谢沈阳建筑大学通信工程2018级温兆熙制作的背景音乐  
+BadAss出场音乐  
+Divide-------------Magna----《Hotline Miami 2 Wrong Number Soundtrack》  
